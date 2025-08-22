@@ -45,9 +45,8 @@ def _orders_to_rows(orders: List[Dict[str, Any]]) -> List[List[str]]:
         if not line_items:
             # still record an empty product row to preserve visibility
             rows.append([
-                order_date, order_id, status, first, last, phone, email,
-                address, city, state, payment_method,
-                "", "", "", order_total
+                order_date, order_id, first, last,f"{city}, {state}" ,"","",
+                phone
             ])
             continue
 
@@ -55,11 +54,16 @@ def _orders_to_rows(orders: List[Dict[str, Any]]) -> List[List[str]]:
             product = li.get("name", "")
             qty = str(li.get("quantity", ""))
             line_total = li.get("total", "")
-            rows.append([
+            '''rows.append([
                 order_date, order_id, status, first, last, phone, email,
                 address, city, state, payment_method,
                 product, qty, line_total, order_total
-            ])
+            ])'''
+
+            rows.append([order_date, order_id,first, last, f"{city}, {state}", 
+            product,qty,order_total,phone
+            
+             ])
     return rows
 
 def append_new_orders_to_master() -> int:

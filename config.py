@@ -13,12 +13,12 @@ MASTER_SHEET_ID = "1-DWSjn3Boc1BtdzAKEBmnA6sa6RVEGen9PMGnC2IiHU"
 
 # Common header for master & all personal sheets (must match exactly)
 HEADERS = [
-    "DATE OF ORDER",            # YYYY-MM-DD (order date, GMT)
+    "DATE",            # YYYY-MM-DD (order date, GMT)
     "ORDER NUMBER",        # e.g., 12345 (no # prefix)
     "FIRST NAME",    
     "LAST NAME",
-    "STATE",
-    "PRODUCTS",
+    "LOCATION",
+    "PRODUCT",
     "QUANTITY",
     "PRICE",
     "PHONE NUMBER",

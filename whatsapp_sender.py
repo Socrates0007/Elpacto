@@ -35,22 +35,19 @@ def _save_last_sent_row(name: str, row: int) -> None:
         f.write(str(row))
 
 def _row_to_message(row: List[str]) -> str:
-    # Map row values using HEADERS order
     kv = {HEADERS[i]: (row[i] if i < len(row) else "") for i in range(len(HEADERS))}
     lines = [
         "New Order Assigned 🛍️",
-        f"Order #{kv['ORDER_ID']}",
-        f"Status: {kv['STATUS']}",
-        f"Customer: {kv['FIRST_NAME']} {kv['LAST_NAME']}",
-        f"Phone: {kv['PHONE']}",
-        f"Address: {kv['ADDRESS']}, {kv['CITY']}, {kv['STATE']}",
-        f"Payment: {kv['PAYMENT_METHOD']}",
-        "Items:",
-        f" - {kv['PRODUCT']} x{kv['QTY']} @ NGN{kv['LINE_TOTAL']}",
-        f"Order Total: NGN{kv['ORDER_TOTAL']}",
-        f"Date: {kv['DATE']}",
+        f"Order #{kv.get('ORDER NUMBER', 'N/A')}",
+        f"Customer: {kv.get('FIRST NAME', '')} {kv.get('LAST NAME', '')}",
+        f"Phone: {kv.get('PHONE NUMBER', '')}",
+        f"Location: {kv.get('LOCATION', '')}",
+        f"Items:",
+        f" - {kv.get('PRODUCT', '')} x{kv.get('QUANTITY', '')} @ NGN{kv.get('PRICE', '')}",
+        f"Date: {kv.get('DATE', '')}",
     ]
     return "\n".join(lines)
+
 
 def send_new_personal_rows_via_whatsapp():
     client = _gs_client()
@@ -97,6 +94,7 @@ def send_new_personal_rows_via_whatsapp():
 
     print(f"📦 Total WhatsApp messages sent: {total_msgs}")
     return total_msgs
+
 
 if __name__ == "__main__":
     send_new_personal_rows_via_whatsapp()

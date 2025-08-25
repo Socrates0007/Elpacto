@@ -48,6 +48,8 @@ def split_new_master_rows_chunks(batch_size: int = 500, sleep_seconds: float = 2
     Upload in batches with sleep to avoid hitting Google Sheets API quota.
     """
     client = _gs_client()
+
+    
     master = client.open_by_key(MASTER_SHEET_ID).sheet1
 
     all_vals: List[List[str]] = master.get_all_values()

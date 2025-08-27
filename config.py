@@ -1,3 +1,4 @@
+import os
 # config.py
 
 # WooCommerce
@@ -26,7 +27,7 @@ HEADERS = [
 ]
 
 # State directory (for TXT trackers)
-STATE_DIR = "state"
+STATE_DIR = os.path.join(os.path.dirname(__file__), "state")
 
 # WhatsApp sending safety delay (seconds) between messages
 WHATSAPP_DELAY_SECONDS = 5

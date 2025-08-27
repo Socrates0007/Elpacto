@@ -16,6 +16,8 @@ def _load_last_order_id() -> int:
     _ensure_state_dir()
     if not os.path.exists(LAST_ID_FILE):
         return 0
+    
+    
     try:
         with open(LAST_ID_FILE, "r") as f:
             val = f.read().strip()

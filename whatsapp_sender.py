@@ -88,6 +88,7 @@ def send_new_personal_rows_via_whatsapp():
                 print(f"❌ WhatsApp send failed for {name}: {e}")
 
         # Update last sent absolute row = header (1) + current data count
+        
         new_abs = 1 + len(data)
         _save_last_sent_row(name, new_abs)
         print(f"✅ Updated last_sent_row for {name} -> {new_abs}")

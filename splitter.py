@@ -15,6 +15,7 @@ def _ensure_state_dir():
 
 def _load_last_distributed_row() -> int:
     _ensure_state_dir()
+
     if not os.path.exists(TRACK_FILE):
         return 1
     with open(TRACK_FILE, "r") as f:
@@ -38,8 +39,11 @@ def _gs_client():
 
 
 def _ensure_headers(ws):
-    if not ws.row_values(1):
+    current_headers = ws.row_values(1)
+    if not current_headers:
         ws.append_row(HEADERS, value_input_option="USER_ENTERED")
+    elif current_headers != HEADERS:
+        ws.update("1:1", [HEADERS])  # overwrite with correct headers
 
 
 def split_new_master_rows_chunks(batch_size: int = 500, sleep_seconds: float = 2.0) -> int:
@@ -49,17 +53,19 @@ def split_new_master_rows_chunks(batch_size: int = 500, sleep_seconds: float = 2
     """
     client = _gs_client()
 
-    
     master = client.open_by_key(MASTER_SHEET_ID).sheet1
 
+    # Fetch only new rows instead of entire sheet
+    last_idx = _load_last_distributed_row()
     all_vals: List[List[str]] = master.get_all_values()
+
     if not all_vals:
         print("Master is empty.")
         return 0
 
     header, data = all_vals[0], all_vals[1:]
 
-    last_idx = _load_last_distributed_row()
+    # Slice only new rows
     start_data_index = max(0, last_idx - 1)
     new_rows = data[start_data_index:]
 
@@ -100,8 +106,8 @@ def split_new_master_rows_chunks(batch_size: int = 500, sleep_seconds: float = 2
 
         start = end
 
-    # Update tracker
-    new_last_abs = 1 + len(data)
+    # Update tracker properly
+    new_last_abs = last_idx + assigned_count
     _save_last_distributed_row(new_last_abs)
     print(f"✅ Updated last_distributed_row -> {new_last_abs}")
 
@@ -110,3 +116,4 @@ def split_new_master_rows_chunks(batch_size: int = 500, sleep_seconds: float = 2
 
 if __name__ == "__main__":
     split_new_master_rows_chunks()
+
